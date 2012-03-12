@@ -77,12 +77,38 @@ class Ob2ob extends OBFController
 	
 		$response = $this->apiModel->upload($media_file);
 
-		echo 'here is the response: ';
-		var_dump($response); die();
+		if(!empty($response->success))
+		{
 
-		return array(true,'Success');
+			$item = new stdClass();
+			$item->local_id = 0;
+			$item->id = '';
+			$item->artist = $media['artist'];
+			$item->title = $media['title'];
+			$item->album = $media['album'];
+			$item->year = $media['year'];
+			$item->country_id = $media['country_id'];
+			$item->category_id = $media['category_id'];
+			$item->language_id = $media['language_id'];
+			$item->genre_id = $media['genre_id'];
+			$item->comments = $media['comments']; 
+			$item->is_copyright_owner = $media['is_copyright_owner'];
+			$item->is_approved = 0;
+			$item->status = $media['status'];
+			$item->dynamic_select = $media['dynamic_select'];
+			$item->file_id = $response->file_id;
+			$item->file_key = $response->file_key;
+
+			$data = new stdClass();
+			$data->media = array($item);
+
+			$response = $this->apiModel->call('media','edit',$data);
+
+			if($response->status)	return array(true,'Success');
+		}
+	
+		return array(false,'Error');
+
 	}
-
-
 
 }
