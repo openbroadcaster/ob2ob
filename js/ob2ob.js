@@ -8,6 +8,7 @@ var ModuleOb2ob = new function()
 		
 	this.mediaPage = function()
 	{
+		if(this.transferQueueInterval) clearInterval(this.transferQueueInterval);
 		$('#layout_main').html(html.get('modules/ob2ob/ob2ob.html'));
 	}
 
@@ -28,6 +29,9 @@ var ModuleOb2ob = new function()
 			{
 				$('#ob2ob_messagebox').text('Login successful. Drag media items to the box below to transfer.').show();
 				$('#ob2ob_media').show();
+
+				$('#ob2ob_api_form input').attr('disabled',true);
+				$('#ob2ob_verify_login').hide();
 
 				$('#ob2ob_media_items').droppable({
 					drop: function(event, ui) {
@@ -82,8 +86,7 @@ var ModuleOb2ob = new function()
 	this.transfer = function()
 	{
 
-		$('#ob2ob_api_form input').attr('disabled',true);
-		$('#ob2ob_verify_login').hide();
+		$('#ob2ob_media_items tr[data-id] td:first-child').css('display','none');
 		$('#ob2ob_transfer').val('Transferring... (please wait)');
 		$('#ob2ob_transfer').attr('disabled',true);
 
@@ -102,7 +105,9 @@ var ModuleOb2ob = new function()
 		// if nothing left in queue, then mark as complete.
 		if(ModuleOb2ob.transferQueue.length==0 && api.ajax_list.length==0) 
 		{
-			$('#ob2ob_transfer').val('Transfer Complete.  Reload this page to transfer another batch.');
+			$('#ob2ob_transfer_success').show();
+			$('#ob2ob_transfer').hide();
+			$('#ob2ob_messagebox').text('Transfer Complete.  Media will be found under your user with status "unapproved".');
 			clearInterval(ModuleOb2ob.transferQueueInterval);
 			return;
 		}
@@ -124,10 +129,6 @@ var ModuleOb2ob = new function()
 
 			api.post('ob2ob','transfer', post, function(response)
 			{
-
-				// temp
-				$('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text(response.msg);
-				return;
 				
 				if(response.status) $('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text('success');
 				else $('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text('error');
