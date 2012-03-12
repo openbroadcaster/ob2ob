@@ -1,0 +1,47 @@
+<h1>OB-2-OB</h1>
+
+<p>The OB-2-OB system allows you to transfer media to another installation of OpenBroadcaster.</p>
+
+<p class="hidden messagebox" id="ob2ob_messagebox"></p>
+
+<table class="form_table" id="ob2ob_api_form">
+<tr>
+	<td class="required">OpenBroadcaster URL:</td>
+	<td><input id="ob2ob_url" value="sandbox2.openbroadcaster.com" type="text" size="25" /></td>
+</tr>
+
+<tr>
+	<td class="required">Username:</td>
+	<td><input id="ob2ob_user" value="mekyla" type="text" size="25" /></td>
+</tr>
+
+<tr>
+	<td class="required">Password:</td>
+	<td><input id="ob2ob_pass" value="abc123" type="password" size="25" /></td>
+</tr>
+</table>
+
+<div class="center tmargin"><input id="ob2ob_verify_login" type="button" onclick="ModuleOb2ob.checkLogin();" value="Verify Login"></div>
+
+<br><br>
+
+<div id="ob2ob_media" style="display: none;">
+
+	<table class="data_table">	
+		<thead>
+			<tr>
+				<th colspan="3">Media Transfer List</th>
+			</tr>
+		</thead>
+		<tbody id="ob2ob_media_items" class="droppable_target_media">
+			<tr id="ob2ob_media_items_help" class="light">
+				<td colspan="3">(drag items here)</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<br>
+
+	<div class="center"><input id="ob2ob_transfer" type="button" onclick="ModuleOb2ob.transfer();" value="Transfer Media"></div>
+
+</div>
