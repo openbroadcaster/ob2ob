@@ -1,6 +1,10 @@
 var ModuleOb2ob = new function()
 {
 
+	this.cachedURL = false;
+	this.cachedUser = false;
+	this.cachedPass = false;
+	
 	this.init = function()
 	{
 		$('#obmenu-media').append('<li><a href="javascript: ModuleOb2ob.mediaPage();">OB-2-OB</a></li>');
@@ -10,6 +14,10 @@ var ModuleOb2ob = new function()
 	{
 		if(this.transferQueueInterval) clearInterval(this.transferQueueInterval);
 		$('#layout_main').html(html.get('modules/ob2ob/ob2ob.html'));
+
+		if(this.cachedURL) $('#ob2ob_url').val(this.cachedURL);
+		if(this.cachedUser) $('#ob2ob_user').val(this.cachedUser);
+		if(this.cachedPass) $('#ob2ob_pass').val(this.cachedPass);
 	}
 
 	this.checkLogin = function()
@@ -27,6 +35,11 @@ var ModuleOb2ob = new function()
 
 			if(response.status) 
 			{
+
+				ModuleOb2ob.cachedURL = $('#ob2ob_url').val();
+				ModuleOb2ob.cachedUser = $('#ob2ob_user').val();
+				ModuleOb2ob.cachedPass = $('#ob2ob_pass').val();
+
 				$('#ob2ob_messagebox').text('Login successful. Drag media items to the box below to transfer.').show();
 				$('#ob2ob_media').show();
 
@@ -131,7 +144,7 @@ var ModuleOb2ob = new function()
 			{
 				
 				if(response.status) $('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text('success');
-				else $('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text('error');
+				else $('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text(response.msg);
 
 			});
 

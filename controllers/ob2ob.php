@@ -107,7 +107,13 @@ class Ob2ob extends OBFController
 			if($response->status)	return array(true,'Success');
 		}
 	
-		return array(false,'Error');
+		// if($response->msg == 'Media update validation error(s).') $response->msg.=' Genre or Category may be missing on target.';
+
+		$error = $response->data[0][2];
+		if($error=='The genre selected is no longer valid.') $error='The media genre is not available on the target.';
+		if($error=='The category selected is no longer valid.') $error='The media category is not available on the target.';
+
+		return array(false,$error);
 
 	}
 
