@@ -30,9 +30,9 @@ class Ob2ob extends OBFController
 
 		if(substr($url,0,7)!='http://' && substr($url,0,8)!='https://') return array(false,'The URL is invalid.');
 
-		$this->apiModel->setUrl($url);
-		$this->apiModel->setUser($user);
-		$this->apiModel->setPass($pass);
+		$this->apiModel->set_url($url);
+		$this->apiModel->set_user($user);
+		$this->apiModel->set_pass($pass);
 
 		return array(true,'Init complete');
 
@@ -59,7 +59,7 @@ class Ob2ob extends OBFController
 
 		$id = trim($this->data('id'));
 
-		$media = $this->MediaModel->getById($id);
+		$media = $this->MediaModel('get_by_id',$id);
 
 		if(!$media) return array(false,'Media not found.');
 
@@ -77,9 +77,8 @@ class Ob2ob extends OBFController
 	
 		$response = $this->apiModel->upload($media_file);
 
-		if(!empty($response->success))
+		if(!empty($response->file_id))
 		{
-
 			$item = new stdClass();
 			$item->local_id = 0;
 			$item->id = '';
@@ -114,7 +113,6 @@ class Ob2ob extends OBFController
 		if($error=='The category selected is no longer valid.') $error='The media category is not available on the target.';
 
 		return array(false,$error);
-
 	}
 
 }
