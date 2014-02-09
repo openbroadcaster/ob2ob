@@ -25,6 +25,7 @@ class Ob2ob extends OBFController
 
 		parent::__construct();
 		$this->user->require_authenticated();
+    $this->user->require_permission('ob2ob');
 		$this->MediaModel = $this->load->model('Media');
 		$this->apiModel = $this->load->model('Api');
 

@@ -25,7 +25,7 @@ var ModuleOb2ob = new function()
 	
 	this.init = function()
 	{
-		$('#obmenu-media').append('<li><a href="javascript: ModuleOb2ob.mediaPage();">OB-2-OB</a></li>');
+		$('#obmenu-media').append('<li data-permissions="ob2ob"><a href="javascript: ModuleOb2ob.mediaPage();">OB-2-OB</a></li>');
 	}
 		
 	this.mediaPage = function()

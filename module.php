@@ -30,11 +30,13 @@ class Ob2obModule extends OBFModule
 
 	public function install()
 	{
+    $this->db->query('INSERT INTO `users_permissions` (`id`, `name`, `description`, `category`) VALUES (NULL, \'ob2ob\', \'Access OB2OB Module\', \'OB2OB\');');
 		return true;
 	}
 
 	public function uninstall()
 	{
+    $this->db->query('DELETE FROM `users_permissions` WHERE category = \'OB2OB\'');
 		return true;
 	}
 
