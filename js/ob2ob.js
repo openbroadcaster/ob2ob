@@ -16,49 +16,52 @@
     You should have received a copy of the GNU Affero General Public License
     along with OpenBroadcaster Server.  If not, see <http://www.gnu.org/licenses/>.
 */
-var ModuleOb2ob = new function()
+OBModules.Ob2ob = new function()
 {
 
 	this.cachedURL = false;
 	this.cachedUser = false;
 	this.cachedPass = false;
 	
-	this.init = function()
+  this.init = function()
+  {
+    OB.Callbacks.add('ready',0,OBModules.Ob2ob.initMenu);
+  }
+
+	this.initMenu = function()
 	{
-		$('#obmenu-media').append('<li data-permissions="ob2ob"><a href="javascript: ModuleOb2ob.mediaPage();">OB-2-OB</a></li>');
+    OB.UI.addSubMenuItem('media','OB-2-OB','ob2ob',OBModules.Ob2ob.mediaPage,20,'ob2ob');
 	}
 		
 	this.mediaPage = function()
 	{
-		if(this.transferQueueInterval) clearInterval(this.transferQueueInterval);
-		$('#layout_main').html(html.get('modules/ob2ob/ob2ob.html'));
+		if(OBModules.Ob2ob.transferQueueInterval) clearInterval(OBModules.Ob2ob.transferQueueInterval);
+		OB.UI.replaceMain('modules/ob2ob/ob2ob.html');
 
-		if(this.cachedURL) $('#ob2ob_url').val(this.cachedURL);
-		if(this.cachedUser) $('#ob2ob_user').val(this.cachedUser);
-		if(this.cachedPass) $('#ob2ob_pass').val(this.cachedPass);
+		if(OBModules.Ob2ob.cachedURL) $('#ob2ob_url').val(OBModules.Ob2ob.cachedURL);
+		if(OBModules.Ob2ob.cachedUser) $('#ob2ob_user').val(OBModules.Ob2ob.cachedUser);
+		if(OBModules.Ob2ob.cachedPass) $('#ob2ob_pass').val(OBModules.Ob2ob.cachedPass);
 	}
 
 	this.checkLogin = function()
 	{
 
-		$('#ob2ob_messagebox').hide();
-
-		post = new Object;
+		var post = new Object;
 		post.url = $('#ob2ob_url').val();
 		post.user = $('#ob2ob_user').val();
 		post.pass = $('#ob2ob_pass').val();
 
-		api.post('ob2ob','checkLogin',post, function(response)
+		OB.API.post('ob2ob','checkLogin',post, function(response)
 		{
 
 			if(response.status) 
 			{
 
-				ModuleOb2ob.cachedURL = $('#ob2ob_url').val();
-				ModuleOb2ob.cachedUser = $('#ob2ob_user').val();
-				ModuleOb2ob.cachedPass = $('#ob2ob_pass').val();
+				OBModules.Ob2ob.cachedURL = $('#ob2ob_url').val();
+				OBModules.Ob2ob.cachedUser = $('#ob2ob_user').val();
+				OBModules.Ob2ob.cachedPass = $('#ob2ob_pass').val();
 
-				$('#ob2ob_messagebox').text('Login successful. Drag media items to the box below to transfer.').show();
+				$('#ob2ob_message').obWidget('success','Login successful. Drag media items to the box below to transfer.');
 				$('#ob2ob_media').show();
 
 				$('#ob2ob_api_form input').attr('disabled',true);
@@ -78,7 +81,7 @@ var ModuleOb2ob = new function()
 								// add here.
 								$tr = $('<tr></tr>');
 								$tr.append('<td class="item_remove"><td class="item_description"></td><td class="item_status">');
-								$tr.find('.item_remove').html('<a href="javascript: ModuleOb2ob.removeItem('+$(element).attr('data-id')+');">[x]</a></td>');
+								$tr.find('.item_remove').html('<a href="javascript: OBModules.Ob2ob.removeItem('+$(element).attr('data-id')+');">x</a></td>');
 								$tr.find('.item_description').text($(element).attr('data-artist')+' - '+$(element).attr('data-title'));
 								$tr.find('.item_status').text('pending');
 
@@ -91,7 +94,7 @@ var ModuleOb2ob = new function()
 							$('#ob2ob_media_items_help').hide();
 
 							// unselect our media from our sidebar
-							sidebar.media_select_none();
+							OB.Sidebar.mediaSelectNone();
 
 						}
 
@@ -99,7 +102,7 @@ var ModuleOb2ob = new function()
 				});
 
 			}
-			else $('#ob2ob_messagebox').text(response.msg).show();
+			else $('#ob2ob_message').obWidget('error',response.msg);
 
 		});
 
@@ -123,10 +126,10 @@ var ModuleOb2ob = new function()
 
 		$('#ob2ob_media_items tr[data-id]').each(function(index,element)
 		{
-			ModuleOb2ob.transferQueue.push($(element).attr('data-id'));
+			OBModules.Ob2ob.transferQueue.push($(element).attr('data-id'));
 		});
 
-		this.transferQueueInterval = setInterval(this.transferQueueProcess,1000);
+		OBModules.Ob2ob.transferQueueInterval = setInterval(OBModules.Ob2ob.transferQueueProcess,1000);
 
 	}
 
@@ -134,22 +137,22 @@ var ModuleOb2ob = new function()
 	{
 
 		// if nothing left in queue, then mark as complete.
-		if(ModuleOb2ob.transferQueue.length==0 && api.ajax_list.length==0) 
+		if(OBModules.Ob2ob.transferQueue.length==0 && OB.API.ajax_list.length==0) 
 		{
 			$('#ob2ob_transfer_success').show();
 			$('#ob2ob_transfer').hide();
-			$('#ob2ob_messagebox').text('Transfer Complete.  Media will be found under your user with status "unapproved".');
-			clearInterval(ModuleOb2ob.transferQueueInterval);
+			$('#ob2ob_message').obWidget('success','Transfer Complete.  Media will be found under your user with status "unapproved".');
+			clearInterval(OBModules.Ob2ob.transferQueueInterval);
 			return;
 		}
 
 		// transfer next item if nothing in ajax queue.
-		if(api.ajax_list.length) return false;
+		if(OB.API.ajax_list.length) return false;
 
 		else 
 		{
 
-			var item_id = ModuleOb2ob.transferQueue.shift();
+			var item_id = OBModules.Ob2ob.transferQueue.shift();
 			$('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text('transferring...');
 
 			var post = new Object();
@@ -158,7 +161,7 @@ var ModuleOb2ob = new function()
 			post.pass = $('#ob2ob_pass').val();
 			post.id = item_id;
 
-			api.post('ob2ob','transfer', post, function(response)
+			OB.API.post('ob2ob','transfer', post, function(response)
 			{
 				
 				if(response.status) $('#ob2ob_media_items tr[data-id='+item_id+'] td:last-child').text('success');
@@ -172,8 +175,3 @@ var ModuleOb2ob = new function()
 
 }
 
-$(document).ready(function() {
-
-	ModuleOb2ob.init();
-
-});
