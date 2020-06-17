@@ -11,7 +11,7 @@ title: index
 ## Ob2Ob module
 {:toc}
 
-Ob2ob
+![ Ob2Ob](img/ob2ob.png ){: .screenshot}
 
 Ob2ob is a module that demonstrates communication and smart media\DB syncing between dissimilar OpenBroadcaster Server installations through the API. This can be used to distribute commercial messages, music and video libraries, PSA, User Generated Content between portals that normally don't talk with each other.
 
@@ -35,5 +35,4 @@ In the example below we have successfully transferred media from one installatio
 
 If trying to sync more that 1000 items, better to use Bulk Import Module
 
-![ Ob2Ob](img/ob2ob.png ){: .screenshot}
 
