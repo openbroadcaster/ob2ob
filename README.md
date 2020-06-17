@@ -1,6 +1,3 @@
-# reports
-Log analysis and royality reports for Sound Exchange, SOCAN 
+### Ob2Ob 
 
-After running report and downloading locally the CSV file, make sure you select UTF-8 as the character set (if it asks). This is the case when opening in LibreOffice at least. Opening in Google Sheets doesn't ask for character set
-
-Reports are generated as a CSV file. When stations upload reports to SX they must be in xlxs. Otherwise will fail on older xls/97/2003 
+Smart media\DB syncing between dissimilar OpenBroadcaster Server installations through the API. This can be used to distribute commercial messages, music and video libraries, PSA, User Generated Content between portals that normally don't talk with each other. Transfer media libraries without loosing metadata.
