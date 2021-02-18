@@ -1,5 +1,5 @@
 <?php
-/*     
+/*
     Copyright 2012 OpenBroadcaster, Inc.
 
     This file is part of OpenBroadcaster Server.
@@ -27,7 +27,6 @@ class Ob2ob extends OBFController
 		$this->user->require_authenticated();
     $this->user->require_permission('ob2ob');
 		$this->MediaModel = $this->load->model('Media');
-		$this->apiModel = $this->load->model('Api');
 
 	}
 
@@ -48,9 +47,9 @@ class Ob2ob extends OBFController
 
 		if(substr($url,0,7)!='http://' && substr($url,0,8)!='https://') return array(false,'The URL is invalid.');
 
-		$this->apiModel->set_url($url);
-		$this->apiModel->set_user($user);
-		$this->apiModel->set_pass($pass);
+		$this->models->api('set_url', ['url' => $url]);
+		$this->models->api('set_user', ['user' => $user]);
+		$this->models->api('set_pass', ['pass' => $pass]);
 
 		return array(true,'Init complete');
 
@@ -60,9 +59,9 @@ class Ob2ob extends OBFController
 	{
 
 		$init = $this->init();
-		if(!$init[0]) return $init; 
+		if(!$init[0]) return $init;
 
-		$response = $this->apiModel->login();
+		$response = $this->models->api('login');
 
 		if(!empty($response->status)) return array(true,'Success');
 		else return array(false,'Invalid API URL, username, or password.');
@@ -73,7 +72,7 @@ class Ob2ob extends OBFController
 	{
 
 		$init = $this->init();
-		if(!$init[0]) return $init; 
+		if(!$init[0]) return $init;
 
 		$id = trim($this->data('id'));
 
@@ -84,7 +83,7 @@ class Ob2ob extends OBFController
 		// to transfer, must own this media or be able to 'download all media'.
 		if($media['owner_id']==$this->user->param('id')) $this->user->require_permission('create_own_media or download_all_media');
 		else $this->user->require_permission('download all media');
-		
+
 		// determine media location.
 		if($media['is_archived']==1) $media_location = OB_MEDIA_ARCHIVE;
 		elseif($media['is_approved']==0) $media_location = OB_MEDIA_UPLOADS;
@@ -92,8 +91,8 @@ class Ob2ob extends OBFController
 
 		$media_location.='/'.$media['file_location'][0].'/'.$media['file_location'][1].'/';
 		$media_file = $media_location.=$media['filename'];
-	
-		$response = $this->apiModel->upload($media_file);
+
+		$response = $this->models->api('upload', ['file' => $media_file]);
 
 		if(!empty($response->file_id))
 		{
@@ -108,7 +107,7 @@ class Ob2ob extends OBFController
 			$item->category_id = $media['category_id'];
 			$item->language_id = $media['language_id'];
 			$item->genre_id = $media['genre_id'];
-			$item->comments = $media['comments']; 
+			$item->comments = $media['comments'];
 			$item->is_copyright_owner = $media['is_copyright_owner'];
 			$item->is_approved = 0;
 			$item->status = $media['status'];
@@ -119,11 +118,11 @@ class Ob2ob extends OBFController
 			$data = new stdClass();
 			$data->media = array($item);
 
-			$response = $this->apiModel->call('media','edit',$data);
+			$response = $this->models->api('call', ['controller' => 'media', 'action' => 'edit', 'data' => $data]);
 
 			if($response->status)	return array(true,'Success');
 		}
-	
+
 		// if($response->msg == 'Media update validation error(s).') $response->msg.=' Genre or Category may be missing on target.';
 
 		$error = $response->data[0][2];
