@@ -26,8 +26,8 @@ class Ob2ob extends OBFController
 		parent::__construct();
 		$this->user->require_authenticated();
     $this->user->require_permission('ob2ob');
-		$this->MediaModel = $this->load->model('Media');
-
+		
+		$this->models = OBFModels::get_instance();
 	}
 
 	public function init()
@@ -76,7 +76,7 @@ class Ob2ob extends OBFController
 
 		$id = trim($this->data('id'));
 
-		$media = $this->MediaModel('get_by_id',$id);
+		$media = $this->models->media('get_by_id', ['id' => $id]);
 
 		if(!$media) return array(false,'Media not found.');
 
