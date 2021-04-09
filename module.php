@@ -1,6 +1,6 @@
 <?php
 /*     
-    Copyright 2012 OpenBroadcaster, Inc.
+    Copyright 2021 OpenBroadcaster, Inc.
 
     This file is part of OpenBroadcaster Server.
 
@@ -20,8 +20,8 @@
 class Ob2obModule extends OBFModule
 {
 
-	public $name = 'OB-2-OB v0.2';
-	public $description = 'Transfer media to another installation of OpenBroadcaster.';
+	public $name = 'OB-2-OB v2.0';
+	public $description = 'Transfer media and metadata to another instance of OBServer.';
 
 	public function callbacks()
 	{
