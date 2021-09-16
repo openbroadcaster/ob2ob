@@ -118,7 +118,7 @@ class Ob2ob extends OBFController
 			$data = new stdClass();
 			$data->media = array($item);
 
-			$response = $this->models->api('call', ['controller' => 'media', 'action' => 'edit', 'data' => $data]);
+			$response = $this->models->api('call', ['controller' => 'media', 'action' => 'save', 'data' => $data]);
 
 			if($response->status)	return array(true,'Success');
 		}
