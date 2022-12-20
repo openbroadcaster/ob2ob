@@ -3,23 +3,23 @@ layout: default
 title: index
 ---
 
+# Ob2Ob 
+{:.no_toc}
+
 * TOC
 {:toc}
 
 <a name="dashboard"></a>
 
-## Ob2Ob module
-{:toc}
-
 ![ Ob2Ob](img/ob2ob.png ){: .screenshot}
 
 Ob2ob is a module that demonstrates communication and smart media\DB syncing between dissimilar OpenBroadcaster Server installations through the API. This can be used to distribute commercial messages, music and video libraries, PSA, User Generated Content between portals that normally don't talk with each other.
 
-User can sync based on search results e.g. Yukon Artists, before 1990, less than 3 minutes.
+User can sync based on search results e.g. `Yukon Artists, before 1990, less than 3 minutes`
 
 Perquisites:  In order to do this a user account is needed on the target device, file formats have to be approved and the genre has to exist.
 
-__Note: the password is never saved on the target machine but kept in temporary memory so you can submit multiple transfers.__
+__Note:__  _The password is never saved on the target machine but kept in temporary memory so you can submit multiple transfers.
 
 1. Enter in the url of the target machine, user account and password.
 
