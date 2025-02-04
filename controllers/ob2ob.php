@@ -92,6 +92,31 @@ class Ob2ob extends OBFController
 		$media_location.='/'.$media['file_location'][0].'/'.$media['file_location'][1].'/';
 		$media_file = $media_location.=$media['filename'];
 
+		// Get all local and remote metadata fields, then compare them to see which ones are available and match types
+		// on both sides. We only want to transfer compatible data.
+		$localMeta = $this->models->mediametadata('get_all');
+		$remoteMeta = $this->models->api('call', ['controller' => 'metadata', 'action' => 'media_metadata_fields']);
+
+		if (! $remoteMeta->status) {
+			return array(false, 'Failed to get remote metadata fields.');
+		}
+
+		$metaValues = [];
+		foreach ($remoteMeta->data as $remoteField) {
+			$matches = array_filter($localMeta, function($localField) use ($remoteField) {
+				if ($localField['name'] === $remoteField->name && $localField['type'] === $remoteField->type) {
+					return true;
+				}
+
+				return false;
+			});
+
+			if (count($matches) > 0) {
+				$metaValues[] = 'metadata_' . $remoteField->name;
+			}
+		}
+
+		// Upload file and save as media item.
 		$response = $this->models->api('upload', ['file' => $media_file]);
 
 		if(!empty($response->file_id))
@@ -114,6 +139,10 @@ class Ob2ob extends OBFController
 			$item->dynamic_select = $media['dynamic_select'];
 			$item->file_id = $response->file_id;
 			$item->file_key = $response->file_key;
+
+			foreach ($metaValues as $metaValue) {
+				$item->$metaValue = $media[$metaValue];
+			}
 
 			$data = new stdClass();
 			$data->media = array($item);
