@@ -26,7 +26,7 @@ class Ob2ob extends OBFController
 		parent::__construct();
 		$this->user->require_authenticated();
     $this->user->require_permission('ob2ob');
-		
+
 		$this->models = OBFModels::get_instance();
 	}
 
@@ -103,9 +103,9 @@ class Ob2ob extends OBFController
 			$item->title = $media['title'];
 			$item->album = $media['album'];
 			$item->year = $media['year'];
-			$item->country_id = $media['country_id'];
+			$item->country = $media['country'];
 			$item->category_id = $media['category_id'];
-			$item->language_id = $media['language_id'];
+			$item->language = $media['language'];
 			$item->genre_id = $media['genre_id'];
 			$item->comments = $media['comments'];
 			$item->is_copyright_owner = $media['is_copyright_owner'];
