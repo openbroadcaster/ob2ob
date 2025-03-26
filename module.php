@@ -1,5 +1,5 @@
 <?php
-/*     
+/*
     Copyright 2021 OpenBroadcaster, Inc.
 
     This file is part of OpenBroadcaster Server.
@@ -40,4 +40,8 @@ class Ob2obModule extends OBFModule
 		return true;
 	}
 
+    public function purge()
+    {
+        return true;
+    }
 }
