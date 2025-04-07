@@ -30,18 +30,44 @@ class Ob2obModule extends OBFModule
 
 	public function install()
 	{
-    $this->db->query('INSERT INTO `users_permissions` (`id`, `name`, `description`, `category`) VALUES (NULL, \'ob2ob\', \'Access OB2OB Module\', \'OB2OB\');');
-		return true;
+        $this->db->where('name', 'ob2ob');
+        $this->db->get('users_permissions');
+        if ($this->db->num_rows() > 0) {
+            $this->db->where('name', 'ob2ob');
+            $this->db->update('users_permissions', [
+                'enabled' => 1
+            ]);
+        } else {
+            $this->db->insert('users_permissions', [
+                'name' => 'ob2ob',
+                'description' => 'Access OB2OB Module',
+                'category' => 'OB2OB'
+            ]);
+        }
+
+        return true;
 	}
 
 	public function uninstall()
 	{
-    $this->db->query('DELETE FROM `users_permissions` WHERE category = \'OB2OB\'');
-		return true;
+        $this->db->where('name', 'ob2ob');
+        $this->db->update('users_permissions', [
+            'enabled' => 0
+        ]);
+
+        return true;
+    }
+
+    public function update()
+    {
+        return true;
 	}
 
     public function purge()
     {
+        $this->db->where('category', 'OB2OB');
+        $this->db->delete('users_permissions');
+
         return true;
     }
 }
