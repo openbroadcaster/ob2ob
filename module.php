@@ -17,7 +17,9 @@
     You should have received a copy of the GNU Affero General Public License
     along with OpenBroadcaster Server.  If not, see <http://www.gnu.org/licenses/>.
 */
-class Ob2obModule extends OBFModule
+use OpenBroadcaster\Base\Module;
+
+class Ob2obModule extends Module
 {
 
 	public $name = 'OB-2-OB v2.0';

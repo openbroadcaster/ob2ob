@@ -17,7 +17,9 @@
     You should have received a copy of the GNU Affero General Public License
     along with OpenBroadcaster Server.  If not, see <http://www.gnu.org/licenses/>.
 */
-class Ob2ob extends OBFController
+use OpenBroadcaster\Base\Controller;
+
+class Ob2ob extends Controller
 {
 
 	public function __construct()
