@@ -86,7 +86,7 @@ class Ob2ob extends OBFController
 
 		// determine media location.
 		if($media['is_archived']==1) $media_location = OB_MEDIA_ARCHIVE;
-		elseif($media['is_approved']==0) $media_location = OB_MEDIA_UPLOADS;
+		elseif($media['is_approved']==0) $media_location = OB_MEDIA_UNAPPROVED;
 		else $media_location = OB_MEDIA;
 
 		$media_location.='/'.$media['file_location'][0].'/'.$media['file_location'][1].'/';
